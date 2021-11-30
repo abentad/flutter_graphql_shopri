@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "885298790284",
+    "firebase_url": "https://phoneauth-9e258.firebaseio.com",
+    "project_id": "phoneauth-9e258",
+    "storage_bucket": "phoneauth-9e258.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:885298790284:android:5b6e3a8e40c088cb7e20a9",
+        "android_client_info": {
+          "package_name": "com.rentoch.shopri"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "885298790284-l5uqvhq9nqgv8gqrovjop6p1tamr52bs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rentoch.shopri",
+            "certificate_hash": "6cda7f9ab37987e3424136de8113f5f27470c517"
+          }
+        },
+        {
+          "client_id": "885298790284-pgrjop7qumrkn4g075tai7nipfgoum1m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVEiGuREicc6vglgZxztcUe17GlO1NVsM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "885298790284-pgrjop7qumrkn4g075tai7nipfgoum1m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
