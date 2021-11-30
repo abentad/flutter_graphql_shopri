@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
@@ -7,6 +8,8 @@ import 'package:graphql/client.dart';
 import 'package:shopri/constants/api_path.dart';
 import 'package:shopri/controllers/query_controller.dart';
 import 'package:shopri/views/home_screen.dart';
+import 'package:shopri/views/phone_auth_sign_up.dart';
+import 'package:shopri/views/user_info_sign_up_screen.dart';
 import 'package:transition/transition.dart' as transition;
 
 class ApiController extends GetxController {
@@ -20,6 +23,8 @@ class ApiController extends GetxController {
   int? _totalPage;
   String apiTokenStorageKey = "apiToken";
   final storage = const FlutterSecureStorage();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  User? user;
 
 //
 //
@@ -81,6 +86,53 @@ class ApiController extends GetxController {
     }
     update();
     return true;
+  }
+
+  //* for verifying phoneNumber using firebase
+  verifyPhone(String phoneNumber, BuildContext context) async {
+    await _auth.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      timeout: const Duration(seconds: 60),
+      // * this call back gets called when the verification is done automatically
+      verificationFailed: (error) => print(error),
+      verificationCompleted: (phoneAuthCredential) async {
+        Navigator.pop(context);
+        UserCredential result = await _auth.signInWithCredential(phoneAuthCredential);
+        if (result.user != null) {
+          user = result.user;
+          print("phoneNumber: " + user!.phoneNumber.toString());
+          Navigator.push(context, transition.Transition(child: const UserInfoSignUpScreen(), transitionEffect: transition.TransitionEffect.RIGHT_TO_LEFT));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Something went wrong with sms code')));
+        }
+      },
+      codeSent: (verificationId, forceResendingToken) async {
+        showModalBottomSheet(
+          context: context,
+          builder: (context) => PhoneOtpVerificationScreen(phoneNumber: phoneNumber, verificationId: verificationId, forceResend: forceResendingToken),
+          enableDrag: false,
+          isDismissible: false,
+          isScrollControlled: true,
+        );
+      },
+      codeAutoRetrievalTimeout: (verificationId) {},
+    );
+    update();
+  }
+
+  //* is called from the PhoneOtpVerificationScreen
+  void checkCode(String verificationId, String smsCode, BuildContext context) async {
+    AuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
+    UserCredential result = await _auth.signInWithCredential(credential);
+    if (result.user != null) {
+      user = result.user;
+      print("phoneNumber: " + user!.phoneNumber.toString());
+      // TODO: instead of navigating to userInfoSignUpScreen first check if there is any user with this verified phone number if there is
+      // TODO: then load that users data by signing a token in the backend with its id and returning the token and user data then navigate to homescreen
+      Navigator.push(context, transition.Transition(child: const UserInfoSignUpScreen(), transitionEffect: transition.TransitionEffect.RIGHT_TO_LEFT));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Something went wrong with sms code')));
+    }
   }
 
   //* signs in user using auth token found in _token variable
