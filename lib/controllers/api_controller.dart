@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +8,12 @@ import 'package:get/get.dart';
 import 'package:graphql/client.dart';
 import 'package:shopri/constants/api_path.dart';
 import 'package:shopri/controllers/query_controller.dart';
+import 'package:shopri/views/auth_choice.dart';
 import 'package:shopri/views/home_screen.dart';
 import 'package:shopri/views/phone_auth_sign_up.dart';
 import 'package:shopri/views/user_info_sign_up_screen.dart';
 import 'package:transition/transition.dart' as transition;
+import "package:http/http.dart" show Multipartfile;
 
 class ApiController extends GetxController {
   Map<String, dynamic>? _loggedInUserInfo;
@@ -64,32 +67,55 @@ class ApiController extends GetxController {
 
   //*will set client of graphql api with the auth token as a header
   void setClient() {
+    print("Token: $_token");
     final _httpLink = HttpLink(kbaseUrl);
     final _authLink = AuthLink(getToken: () async => 'Bearer $_token');
     Link _link = _authLink.concat(_httpLink);
     _client = GraphQLClient(cache: GraphQLCache(), link: _link);
   }
 
-  //! this should be replaced with sign in with phone only using firebase
-  Future<bool> signInWithEmailandPass({required String email, required String password}) async {
+  //! finish this
+  void signUpUser(File file, String deviceToken, username, email, phoneNumber, dateJoined, BuildContext context) async {
+    // final myFile = MultipartFile.fromString(
+    //   "",
+    //   "just plain text",
+    //   filename: "sample_upload.txt",
+    //   contentType: MediaType("text", "plain"),
+    // );
     final QueryOptions options = QueryOptions(
-      document: gql(Get.find<QueryController>().loginUserByEmailandPass(email: email, password: password)),
+      document: gql(
+        Get.find<QueryController>().signUpUser(file, deviceToken, username, email, phoneNumber, dateJoined),
+      ),
       variables: <String, dynamic>{},
     );
     final QueryResult result = await _client!.query(options);
-    _loggedInUserInfo = result.data!['loginUser'];
-    print(_loggedInUserInfo);
-    await storage.write(key: apiTokenStorageKey, value: _loggedInUserInfo!['token']);
     if (result.hasException) {
       print(result.exception.toString());
-      return false;
+    }
+    Map<String, dynamic>? _data = result.data;
+    if (_data != null) {
+      _token = _data['createUser']['token'];
+      await storage.write(key: apiTokenStorageKey, value: _token);
+      _loggedInUserInfo = _data['createUser']['user'];
+    } else {
+      print("data: $_data");
+    }
+    if (_loggedInUserInfo != null) {
+      Navigator.pushReplacement(
+        context,
+        transition.Transition(
+            child: HomeScreen(
+              userInfo: _loggedInUserInfo,
+            ),
+            transitionEffect: transition.TransitionEffect.FADE,
+            curve: Curves.easeIn),
+      );
     }
     update();
-    return true;
   }
 
   //* for verifying phoneNumber using firebase
-  verifyPhone(String phoneNumber, BuildContext context) async {
+  void verifyPhone(String phoneNumber, BuildContext context) async {
     await _auth.verifyPhoneNumber(
       phoneNumber: phoneNumber,
       timeout: const Duration(seconds: 60),
@@ -101,7 +127,25 @@ class ApiController extends GetxController {
         if (result.user != null) {
           user = result.user;
           print("phoneNumber: " + user!.phoneNumber.toString());
-          Navigator.push(context, transition.Transition(child: const UserInfoSignUpScreen(), transitionEffect: transition.TransitionEffect.RIGHT_TO_LEFT));
+          Map<String, dynamic>? _data = await findUserByPhoneNumberAndSignIn(phoneNumber);
+          if (_data == null) {
+            Navigator.push(context, transition.Transition(child: UserInfoSignUpScreen(phoneNumber: phoneNumber), transitionEffect: transition.TransitionEffect.RIGHT_TO_LEFT));
+          } else {
+            _token = _data['userByPhone']['token'];
+            await storage.write(key: apiTokenStorageKey, value: _token);
+            _loggedInUserInfo = _data['userByPhone']['user'];
+            if (_loggedInUserInfo != null) {
+              Navigator.pushReplacement(
+                context,
+                transition.Transition(
+                    child: HomeScreen(
+                      userInfo: _loggedInUserInfo,
+                    ),
+                    transitionEffect: transition.TransitionEffect.FADE,
+                    curve: Curves.easeIn),
+              );
+            }
+          }
         } else {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Something went wrong with sms code')));
         }
@@ -121,18 +165,50 @@ class ApiController extends GetxController {
   }
 
   //* is called from the PhoneOtpVerificationScreen
-  void checkCode(String verificationId, String smsCode, BuildContext context) async {
+  void checkCode(String verificationId, String smsCode, BuildContext context, String phoneNumber) async {
     AuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
     UserCredential result = await _auth.signInWithCredential(credential);
     if (result.user != null) {
       user = result.user;
       print("phoneNumber: " + user!.phoneNumber.toString());
-      // TODO: instead of navigating to userInfoSignUpScreen first check if there is any user with this verified phone number if there is
-      // TODO: then load that users data by signing a token in the backend with its id and returning the token and user data then navigate to homescreen
-      Navigator.push(context, transition.Transition(child: const UserInfoSignUpScreen(), transitionEffect: transition.TransitionEffect.RIGHT_TO_LEFT));
+      Map<String, dynamic>? _data = await findUserByPhoneNumberAndSignIn(phoneNumber);
+      if (_data == null) {
+        Navigator.push(context, transition.Transition(child: UserInfoSignUpScreen(phoneNumber: phoneNumber), transitionEffect: transition.TransitionEffect.RIGHT_TO_LEFT));
+      } else {
+        _token = _data['userByPhone']['token'];
+        await storage.write(key: apiTokenStorageKey, value: _token);
+        _loggedInUserInfo = _data['userByPhone']['user'];
+        if (_loggedInUserInfo != null) {
+          Navigator.pushReplacement(
+            context,
+            transition.Transition(
+                child: HomeScreen(
+                  userInfo: _loggedInUserInfo,
+                ),
+                transitionEffect: transition.TransitionEffect.FADE,
+                curve: Curves.easeIn),
+          );
+        }
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Something went wrong with sms code')));
     }
+    update();
+  }
+
+  void signOutUser(BuildContext context) async {
+    await storage.write(key: apiTokenStorageKey, value: null);
+    Navigator.pushAndRemoveUntil(context, transition.Transition(child: const AuthChoice(), transitionEffect: transition.TransitionEffect.LEFT_TO_RIGHT), (route) => false);
+  }
+
+  Future<Map<String, dynamic>?> findUserByPhoneNumberAndSignIn(String phoneNumber) async {
+    final QueryOptions options = QueryOptions(document: gql(Get.find<QueryController>().findUserByPhoneNumber(phoneNumber: phoneNumber)), variables: <String, dynamic>{});
+    final QueryResult result = await _client!.query(options);
+    if (result.hasException) {
+      print(result.exception.toString());
+    }
+    Map<String, dynamic>? _data = result.data;
+    return _data;
   }
 
   //* signs in user using auth token found in _token variable

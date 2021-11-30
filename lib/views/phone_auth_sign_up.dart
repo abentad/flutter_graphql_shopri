@@ -20,24 +20,25 @@ class _PhoneAuthSignUpState extends State<PhoneAuthSignUp> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
-        shadowColor: Colors.transparent,
-        elevation: 0.0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-        ),
-      ),
+      // appBar: AppBar(
+      //   automaticallyImplyLeading: false,
+      //   backgroundColor: Colors.white,
+      //   shadowColor: Colors.transparent,
+      //   elevation: 0.0,
+      //   leading: IconButton(
+      //     onPressed: () {
+      //       Navigator.pop(context);
+      //     },
+      //     icon: const Icon(Icons.arrow_back, color: Colors.black),
+      //   ),
+      // ),
       body: SingleChildScrollView(
         reverse: true,
         physics: const BouncingScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            SizedBox(height: size.height * 0.08),
             SizedBox(child: Center(child: Lottie.asset('assets/sms.json', height: size.height * 0.25, width: size.width * 0.25, repeat: false))),
             const Text('OTP Verification', style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600)),
             SizedBox(height: size.height * 0.02),
@@ -99,8 +100,6 @@ class _PhoneAuthSignUpState extends State<PhoneAuthSignUp> {
                     String phone = checkPhoneNumber(_phoneNumberController.text);
                     if (phone != "error") {
                       Get.find<ApiController>().verifyPhone(phone, context);
-                      // Navigator.push(
-                      //     context, transition.Transition(child: PhoneOtpVerificationScreen(phoneNumber: phone), transitionEffect: transition.TransitionEffect.RIGHT_TO_LEFT));
                     }
                   }
                 },
@@ -193,7 +192,7 @@ class _PhoneOtpVerificationScreenState extends State<PhoneOtpVerificationScreen>
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: CustomMaterialButton(
                 onPressed: () {
-                  Get.find<ApiController>().checkCode(widget.verificationId, _pinPutController.text.trim(), context);
+                  Get.find<ApiController>().checkCode(widget.verificationId, _pinPutController.text.trim(), context, widget.phoneNumber);
                 },
                 btnLabel: "Verify",
               ),

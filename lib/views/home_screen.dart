@@ -141,7 +141,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                         const Icon(Icons.star_outline),
                                         const FlutterLogo(),
                                         InkWell(
-                                          onTap: () {},
+                                          onTap: () {
+                                            Get.find<ApiController>().signOutUser(context);
+                                          },
                                           borderRadius: BorderRadius.circular(50.0),
                                           child: ClipRRect(
                                             borderRadius: BorderRadius.circular(50.0),
