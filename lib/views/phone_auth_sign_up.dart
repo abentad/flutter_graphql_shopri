@@ -20,18 +20,6 @@ class _PhoneAuthSignUpState extends State<PhoneAuthSignUp> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      // appBar: AppBar(
-      //   automaticallyImplyLeading: false,
-      //   backgroundColor: Colors.white,
-      //   shadowColor: Colors.transparent,
-      //   elevation: 0.0,
-      //   leading: IconButton(
-      //     onPressed: () {
-      //       Navigator.pop(context);
-      //     },
-      //     icon: const Icon(Icons.arrow_back, color: Colors.black),
-      //   ),
-      // ),
       body: SingleChildScrollView(
         reverse: true,
         physics: const BouncingScrollPhysics(),
@@ -83,10 +71,7 @@ class _PhoneAuthSignUpState extends State<PhoneAuthSignUp> {
                   enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0), borderSide: const BorderSide(color: Color(0xfff2f2f2))),
                   focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0), borderSide: const BorderSide(color: Color(0xfff2f2f2))),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0), borderSide: const BorderSide(color: Color(0xfff2f2f2))),
-                  prefixIcon: Padding(
-                    padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-                    child: Text("+251", style: TextStyle(fontSize: 16.0, color: Colors.grey.shade600)),
-                  ),
+                  prefixIcon: Padding(padding: const EdgeInsets.only(left: 10.0, right: 10.0), child: Text("+251", style: TextStyle(fontSize: 16.0, color: Colors.grey.shade600))),
                   prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
                 ),
               ),
@@ -100,6 +85,8 @@ class _PhoneAuthSignUpState extends State<PhoneAuthSignUp> {
                     String phone = checkPhoneNumber(_phoneNumberController.text);
                     if (phone != "error") {
                       Get.find<ApiController>().verifyPhone(phone, context);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: const Text('Invalid Phone Number.', style: TextStyle(color: Colors.black)), backgroundColor: Colors.grey.shade200));
                     }
                   }
                 },
@@ -153,16 +140,8 @@ class _PhoneOtpVerificationScreenState extends State<PhoneOtpVerificationScreen>
               child: RichText(
                 text: TextSpan(
                   text: 'Enter the OTP sent to',
-                  style: const TextStyle(
-                    color: Colors.grey,
-                    fontSize: 14,
-                  ),
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: ' ${widget.phoneNumber}',
-                      style: const TextStyle(color: Colors.black, fontSize: 16),
-                    ),
-                  ],
+                  style: const TextStyle(color: Colors.grey, fontSize: 14),
+                  children: <TextSpan>[TextSpan(text: ' ${widget.phoneNumber}', style: const TextStyle(color: Colors.black, fontSize: 16))],
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -178,7 +157,6 @@ class _PhoneOtpVerificationScreenState extends State<PhoneOtpVerificationScreen>
                 textStyle: const TextStyle(fontSize: 25.0, color: Colors.black),
                 eachFieldWidth: size.width * 0.12,
                 eachFieldHeight: size.height * 0.08,
-                // onSubmit: (String pin) => _showSnackBar(pin),
                 focusNode: _pinPutFocusNode,
                 controller: _pinPutController,
                 submittedFieldDecoration: pinPutDecoration,

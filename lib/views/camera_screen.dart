@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:shopri/controllers/my_camera_controller.dart';
+import 'package:shopri/views/product_add_screen.dart';
+import 'package:transition/transition.dart' as transition;
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({Key? key, required this.cameras}) : super(key: key);
@@ -112,6 +114,7 @@ class _CameraScreenState extends State<CameraScreen> with TickerProviderStateMix
                         pictureFile = await cameraController.takePicture();
                         setState(() {});
                         print(pictureFile);
+                        Navigator.pushReplacement(context, transition.Transition(child: ProductAddScreen(productImageFile: pictureFile), transitionEffect: transition.TransitionEffect.FADE));
                       },
                       child: Container(
                         height: size.height * 0.18,
@@ -126,6 +129,7 @@ class _CameraScreenState extends State<CameraScreen> with TickerProviderStateMix
                     InkWell(
                       onTap: () async {
                         XFile? pickedFile = await Get.find<MyCameraController>().pickImageFromGallery();
+                        Navigator.pushReplacement(context, transition.Transition(child: ProductAddScreen(productImageFile: pickedFile), transitionEffect: transition.TransitionEffect.FADE));
                       },
                       child: Icon(
                         MdiIcons.image,

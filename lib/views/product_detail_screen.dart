@@ -55,10 +55,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           Container(
                             width: double.infinity,
                             height: 300.0,
-                            decoration: BoxDecoration(
-                              // color: Color(0xfff2f2f2),
-                              color: Colors.grey.shade100,
-                            ),
+                            decoration: BoxDecoration(color: Colors.grey.shade100),
                             child: CarouselSlider.builder(
                               itemCount: productInfo!['images'].length,
                               itemBuilder: (context, index, realIndex) {
@@ -347,7 +344,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   color: Colors.teal,
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
                                   height: 50.0,
-                                  child: Text('Message ${productInfo!['poster']['username'].capitalize.toString()}', style: const TextStyle(color: Colors.white)),
+                                  child: Text('Message ${productInfo!['poster']['username'].toString().capitalize}', style: const TextStyle(color: Colors.white)),
                                 ),
                               ),
                               SizedBox(width: size.width * 0.02),

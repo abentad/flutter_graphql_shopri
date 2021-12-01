@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 class ScrollToHideWidget extends StatefulWidget {
-  const ScrollToHideWidget({Key? key, required this.child, required this.widgetHeight, required this.controller, this.duration = const Duration(milliseconds: 200)})
-      : super(key: key);
+  const ScrollToHideWidget({Key? key, required this.child, required this.widgetHeight, required this.controller, this.duration = const Duration(milliseconds: 200)}) : super(key: key);
   final Widget child;
   final double widgetHeight;
   final ScrollController controller;
@@ -125,17 +124,10 @@ class _ScrollToScaleWidgetState extends State<ScrollToScaleWidget> with TickerPr
   }
 
   late final AnimationController _controller = AnimationController(duration: widget.duration, vsync: this);
-  late final Animation<double> _animation = CurvedAnimation(parent: _controller, curve: Curves.bounceIn);
+  late final Animation<double> _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
 
   @override
   Widget build(BuildContext context) {
-    return ScaleTransition(
-      scale: _animation,
-      child: Wrap(
-        children: [
-          widget.child,
-        ],
-      ),
-    );
+    return ScaleTransition(scale: _animation, child: Wrap(children: [widget.child]));
   }
 }

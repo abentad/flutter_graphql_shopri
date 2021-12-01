@@ -131,10 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   height: size.height * 0.07,
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      boxShadow: [BoxShadow(color: Colors.grey.shade200, offset: const Offset(2, 2), blurRadius: 10.0)],
-                                    ),
+                                    decoration: BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.grey.shade200, offset: const Offset(2, 2), blurRadius: 10.0)]),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
@@ -147,11 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           borderRadius: BorderRadius.circular(50.0),
                                           child: ClipRRect(
                                             borderRadius: BorderRadius.circular(50.0),
-                                            child: Image(
-                                              image: NetworkImage(getProfileImageUrl(widget.userInfo!['profile_image'])),
-                                              height: 35.0,
-                                              width: 35.0,
-                                            ),
+                                            child: Image(image: NetworkImage(getProfileImageUrl(widget.userInfo!['profile_image'])), height: 35.0, width: 35.0),
                                           ),
                                         ),
                                       ],
@@ -163,30 +156,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
-                      // SliverAppBar(
-                      //   backgroundColor: Colors.white,
-                      //   floating: true,
-                      //   automaticallyImplyLeading: false,
-                      //   // centerTitle: true,
-                      //   leading: const Icon(Icons.star_outline),
-                      //   flexibleSpace: const FlexibleSpaceBar(
-                      //     title: FlutterLogo(),
-                      //   ),
-                      //   actions: [
-                      //     InkWell(
-                      //       onTap: () {},
-                      //       borderRadius: BorderRadius.circular(50.0),
-                      //       child: ClipRRect(
-                      //         borderRadius: BorderRadius.circular(50.0),
-                      //         child: Image(
-                      //           image: NetworkImage(getProfileImageUrl(Get.find<ApiController>().loggedInUserInfo!['profile_image'])),
-                      //           height: 35.0,
-                      //           width: 35.0,
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ],
-                      // ),
                       SliverToBoxAdapter(child: Container(height: size.height * 0.02)),
                       GetBuilder<ApiController>(
                         builder: (controller) => SliverStaggeredGrid.countBuilder(
@@ -216,16 +185,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       loadInfo != "over"
                           ? isLoading
-                              ? SliverToBoxAdapter(
-                                  child: SizedBox(child: Center(child: Lottie.asset('assets/loading.json', height: size.height * 0.1, width: size.width * 0.1))),
-                                )
+                              ? SliverToBoxAdapter(child: SizedBox(child: Center(child: Lottie.asset('assets/loading.json', height: size.height * 0.1, width: size.width * 0.1))))
                               // : const SliverToBoxAdapter(child: SizedBox.shrink())
-                              : SliverToBoxAdapter(
-                                  child: SizedBox(child: Center(child: Lottie.asset('assets/loading.json', height: size.height * 0.1, width: size.width * 0.1))),
-                                )
-                          : const SliverToBoxAdapter(child: SizedBox.shrink())
-                      // : const SliverToBoxAdapter(child: Center(child: Text("No more data")))
-                      // SliverToBoxAdapter(child: SizedBox(height: size.height * 0.02)),
+                              : SliverToBoxAdapter(child: SizedBox(child: Center(child: Lottie.asset('assets/loading.json', height: size.height * 0.1, width: size.width * 0.1))))
+                          // : const SliverToBoxAdapter(child: SizedBox.shrink())
+                          : const SliverToBoxAdapter(child: Center(child: Text("No more data")))
                     ],
                   ),
                 ),
@@ -233,16 +197,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        bottomNavigationBar: ScrollToHideWidget(
-          controller: scrollController,
-          widgetHeight: 60.0,
-          child: const BuildBottomNavBar(),
-        ),
-        floatingActionButton: ScrollToScaleWidget(
-          controller: scrollController,
-          duration: const Duration(milliseconds: 300),
-          child: const BuildFloatingActoinButton(),
-        ),
+        bottomNavigationBar: ScrollToHideWidget(controller: scrollController, widgetHeight: 60.0, child: const BuildBottomNavBar()),
+        floatingActionButton: ScrollToScaleWidget(controller: scrollController, duration: const Duration(milliseconds: 300), child: const BuildFloatingActoinButton()),
       ),
     );
   }

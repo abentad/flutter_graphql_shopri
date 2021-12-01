@@ -16,7 +16,6 @@ class _InitLoadingState extends State<InitLoading> {
   @override
   void initState() {
     super.initState();
-    //TODO: if there is token sign in with token if not go to sign in page
     checkUserAvailability();
   }
 
@@ -32,10 +31,12 @@ class _InitLoadingState extends State<InitLoading> {
 
   @override
   Widget build(BuildContext context) {
-    return buildInitLoading();
+    return buildInitLoading(context);
   }
 
-  Widget buildInitLoading() {
+  Widget buildInitLoading(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: Center(
         child: SizedBox(
@@ -44,14 +45,7 @@ class _InitLoadingState extends State<InitLoading> {
           child: Shimmer.fromColors(
             baseColor: Colors.red,
             highlightColor: Colors.yellow,
-            child: const Text(
-              'Shopri',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 40.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            child: Text('Shopri', textAlign: TextAlign.center, style: TextStyle(fontSize: size.height * 0.06, fontWeight: FontWeight.bold)),
           ),
         ),
       ),

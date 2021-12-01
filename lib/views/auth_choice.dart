@@ -38,8 +38,7 @@ class _AuthChoiceState extends State<AuthChoice> {
             // SizedBox(height: size.height * 0.02),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 40.0),
-              child: Text('Magna ullamco sunt ullamco mollit qui officia',
-                  style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w500, color: Colors.grey), textAlign: TextAlign.center),
+              child: Text('Magna ullamco sunt ullamco mollit qui officia', style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w500, color: Colors.grey), textAlign: TextAlign.center),
             ),
             // SizedBox(height: size.height * 0.12),
             Padding(
@@ -50,10 +49,7 @@ class _AuthChoiceState extends State<AuthChoice> {
                 minWidth: double.infinity,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
                 height: size.height * 0.07,
-                child: const Text(
-                  "Sign Up",
-                  style: TextStyle(fontSize: 16.0, color: Colors.white),
-                ),
+                child: const Text("Sign Up", style: TextStyle(fontSize: 16.0, color: Colors.white)),
               ),
             ),
             // SizedBox(height: size.height * 0.04),
