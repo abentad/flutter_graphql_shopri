@@ -13,7 +13,10 @@ import 'package:shopri/views/home_screen.dart';
 import 'package:shopri/views/phone_auth_sign_up.dart';
 import 'package:shopri/views/user_info_sign_up_screen.dart';
 import 'package:transition/transition.dart' as transition;
-import "package:http/http.dart" show Multipartfile;
+// import "package:http/http.dart" show Multipartfile;
+import "package:http/http.dart" as http;
+
+import 'package:http_parser/http_parser.dart';
 
 class ApiController extends GetxController {
   Map<String, dynamic>? _loggedInUserInfo;
@@ -75,20 +78,24 @@ class ApiController extends GetxController {
   }
 
   //! finish this
-  void signUpUser(File file, String deviceToken, username, email, phoneNumber, dateJoined, BuildContext context) async {
-    // final myFile = MultipartFile.fromString(
-    //   "",
-    //   "just plain text",
-    //   filename: "sample_upload.txt",
-    //   contentType: MediaType("text", "plain"),
-    // );
-    final QueryOptions options = QueryOptions(
-      document: gql(
-        Get.find<QueryController>().signUpUser(file, deviceToken, username, email, phoneNumber, dateJoined),
-      ),
-      variables: <String, dynamic>{},
+  void signUpUser(File file, String deviceToken, username, email, phoneNumber, BuildContext context) async {
+    final myFile = await http.MultipartFile.fromPath(
+      'profileImage',
+      file.path,
+      contentType: MediaType('image', 'jpeg'),
     );
-    final QueryResult result = await _client!.query(options);
+    final MutationOptions options = MutationOptions(
+      document: gql(Get.find<QueryController>().signUpUser()),
+      variables: <String, dynamic>{
+        'file': myFile,
+        'deviceToken': deviceToken,
+        'username': username,
+        'email': email,
+        'phoneNumber': phoneNumber,
+        'dateJoined': DateTime.now().toString(),
+      },
+    );
+    final QueryResult result = await _client!.mutate(options);
     if (result.hasException) {
       print(result.exception.toString());
     }
@@ -97,20 +104,21 @@ class ApiController extends GetxController {
       _token = _data['createUser']['token'];
       await storage.write(key: apiTokenStorageKey, value: _token);
       _loggedInUserInfo = _data['createUser']['user'];
+      if (_loggedInUserInfo != null) {
+        Navigator.pushReplacement(
+          context,
+          transition.Transition(
+              child: HomeScreen(
+                userInfo: _loggedInUserInfo,
+              ),
+              transitionEffect: transition.TransitionEffect.FADE,
+              curve: Curves.easeIn),
+        );
+      }
     } else {
       print("data: $_data");
     }
-    if (_loggedInUserInfo != null) {
-      Navigator.pushReplacement(
-        context,
-        transition.Transition(
-            child: HomeScreen(
-              userInfo: _loggedInUserInfo,
-            ),
-            transitionEffect: transition.TransitionEffect.FADE,
-            curve: Curves.easeIn),
-      );
-    }
+
     update();
   }
 
@@ -166,12 +174,14 @@ class ApiController extends GetxController {
 
   //* is called from the PhoneOtpVerificationScreen
   void checkCode(String verificationId, String smsCode, BuildContext context, String phoneNumber) async {
+    print("check code called");
     AuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
     UserCredential result = await _auth.signInWithCredential(credential);
     if (result.user != null) {
       user = result.user;
-      print("phoneNumber: " + user!.phoneNumber.toString());
+      print("*phoneNumber: " + user!.phoneNumber.toString());
       Map<String, dynamic>? _data = await findUserByPhoneNumberAndSignIn(phoneNumber);
+      // print("data $_data");
       if (_data == null) {
         Navigator.push(context, transition.Transition(child: UserInfoSignUpScreen(phoneNumber: phoneNumber), transitionEffect: transition.TransitionEffect.RIGHT_TO_LEFT));
       } else {

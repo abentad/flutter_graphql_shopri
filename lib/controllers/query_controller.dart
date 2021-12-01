@@ -69,13 +69,11 @@ class QueryController extends GetxController {
     """;
   }
 
-  String signUpUser(File file, String deviceToken, username, email, phoneNumber, dateJoined) {
-    return """
-      {
-        query: `
-          mutation ($file: Upload!) {
+  String signUpUser() {
+    return r"""
+        mutation ($file: Upload!, $deviceToken: String!, $username: String!, $email: String!, $phoneNumber: String!, $dateJoined: String!) {
             createUser(
-              data: {deviceToken: "$deviceToken", username: "$username", email: "$email", phoneNumber: "$phoneNumber", dateJoined: "$dateJoined"}
+              data: {deviceToken: $deviceToken, username: $username, email: $email, phoneNumber: $phoneNumber, dateJoined: $dateJoined}
               file: $file
             ) {
               token
@@ -90,11 +88,6 @@ class QueryController extends GetxController {
               }
             }
           }
-        `,
-        variables: {
-          file: $file // a.txt
-        }
-      }
     """;
   }
 

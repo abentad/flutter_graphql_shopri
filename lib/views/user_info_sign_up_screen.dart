@@ -126,8 +126,14 @@ class _UserInfoSignUpScreenState extends State<UserInfoSignUpScreen> {
                   onPressed: () {
                     if (_usernameController.text.isNotEmpty && _emailController.text.isNotEmpty && profileImage != null) {
                       //* execute the sign up
-                      Get.find<ApiController>()
-                          .signUpUser(File(profileImage!.path), "", _usernameController.text, _emailController.text, widget.phoneNumber, DateTime.now().toString(), context);
+                      Get.find<ApiController>().signUpUser(
+                        File(profileImage!.path),
+                        "",
+                        _usernameController.text,
+                        _emailController.text,
+                        widget.phoneNumber,
+                        context,
+                      );
                     }
                   },
                   btnLabel: "Sign up",
