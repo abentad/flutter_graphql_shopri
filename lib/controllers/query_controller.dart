@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:get/get.dart';
 
 class QueryController extends GetxController {
@@ -88,6 +86,32 @@ class QueryController extends GetxController {
               }
             }
           }
+    """;
+  }
+
+  String addProduct() {
+    return r"""
+      mutation ($files: [Upload!]!, $name: String!, $price: String!, $description: String!, $category: String!, $datePosted: String!) {
+        createProduct(
+          data: {isPending: "false", views: 0, name: $name, price: $price, description: $description, category: $category, datePosted: $datePosted}
+          files: $files
+        ) {
+          id
+          isPending
+          views
+          name
+          price
+          description
+          category
+          image
+          datePosted
+          poster {
+            id
+            deviceToken
+            username
+          }
+        }
+      }
     """;
   }
 

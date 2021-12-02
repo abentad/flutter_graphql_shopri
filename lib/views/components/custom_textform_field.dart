@@ -64,3 +64,39 @@ class _CustomTextFormFieldStateAuth extends State<CustomTextFormFieldAuth> {
     );
   }
 }
+
+class CustomProductTextFormField extends StatelessWidget {
+  const CustomProductTextFormField({Key? key, required this.size, required this.label, required this.controller, this.maxlines = 1}) : super(key: key);
+  final Size size;
+  final String label;
+  final int maxlines;
+  final TextEditingController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: size.height * 0.02),
+          Text(label, style: const TextStyle(fontSize: 16.0)),
+          SizedBox(height: size.height * 0.008),
+          TextFormField(
+            maxLines: maxlines,
+            controller: controller,
+            cursorColor: Colors.black,
+            style: const TextStyle(fontSize: 18.0),
+            decoration: InputDecoration(
+              hintText: label,
+              hintStyle: TextStyle(color: Colors.grey.shade500),
+              contentPadding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0), borderSide: BorderSide(color: Colors.grey.shade300)),
+              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0), borderSide: BorderSide(color: Colors.grey.shade300)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

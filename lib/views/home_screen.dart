@@ -33,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    print("User: " + widget.userInfo.toString());
+    print("User: " + widget.userInfo!['username'].toString().capitalize!);
     scrollController = ScrollController();
     scrollController.addListener(() async {
       if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {

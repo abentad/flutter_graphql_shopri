@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -28,7 +29,8 @@ class ApiController extends GetxController {
   final storage = const FlutterSecureStorage();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   User? user;
-
+  final List<XFile?> _productImages = [];
+  List<XFile?> get productImages => _productImages;
 //
 //
 //
@@ -41,6 +43,16 @@ class ApiController extends GetxController {
   //* will set loggedInUserInfo variable to the value passed through this function
   void setLoggedInUserInfo(Map<String, dynamic> userInfo) {
     _loggedInUserInfo = userInfo;
+    update();
+  }
+
+  void addToProductImages(XFile? imageFile) {
+    _productImages.add(imageFile);
+    update();
+  }
+
+  void removeFromProductImages(int index) {
+    _productImages.removeAt(index);
     update();
   }
 
@@ -93,6 +105,36 @@ class ApiController extends GetxController {
       }
     } else {
       print("data: $result.data");
+    }
+    update();
+  }
+
+  void addProduct(String name, String price, String? category, String description, BuildContext context) async {
+    List<http.MultipartFile> _productMultipartImages = [];
+    for (var xfile in _productImages) {
+      final myFile = await http.MultipartFile.fromPath('productImage', File(xfile!.path).path, contentType: MediaType('image', 'jpeg'));
+      _productMultipartImages.add(myFile);
+    }
+    final MutationOptions options = MutationOptions(
+      document: gql(Get.find<QueryController>().addProduct()),
+      variables: <String, dynamic>{
+        'files': _productMultipartImages,
+        'name': name,
+        'price': price,
+        'description': description,
+        'category': category,
+        'datePosted': DateTime.now().toString(),
+      },
+    );
+    final QueryResult result = await _client!.mutate(options);
+    if (result.hasException) print(result.exception.toString());
+    if (result.data != null) {
+      Navigator.pushReplacement(context, transition.Transition(child: HomeScreen(userInfo: _loggedInUserInfo), transitionEffect: transition.TransitionEffect.FADE));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(result.data!['createProduct']['name'] + " has been successfully added.", style: const TextStyle(color: Colors.black)), backgroundColor: Colors.white));
+    } else {
+      print("data: $result.data");
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Adding $name Failed", style: const TextStyle(color: Colors.black)), backgroundColor: Colors.white));
     }
     update();
   }
