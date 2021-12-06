@@ -29,8 +29,8 @@ class ApiController extends GetxController {
   final storage = const FlutterSecureStorage();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   User? user;
-  final List<XFile?> _productImages = [];
-  List<XFile?> get productImages => _productImages;
+  final List<File?> _productImages = [];
+  List<File?> get productImages => _productImages;
 //
 //
 //
@@ -46,7 +46,7 @@ class ApiController extends GetxController {
     update();
   }
 
-  void addToProductImages(XFile? imageFile) {
+  void addToProductImages(File? imageFile) {
     _productImages.add(imageFile);
     update();
   }

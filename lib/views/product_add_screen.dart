@@ -60,8 +60,7 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                   children: [
                     TextButton(
                       onPressed: () {
-                        Navigator.push(context,
-                            transition.Transition(child: CameraScreen(cameras: Get.find<MyCameraController>().cameras, fromAddMore: true), transitionEffect: transition.TransitionEffect.FADE));
+                        Navigator.push(context, transition.Transition(child: CameraScreen(cameras: Get.find<MyCameraController>().cameras), transitionEffect: transition.TransitionEffect.FADE));
                       },
                       child: const Text('Add More'),
                     ),
@@ -127,7 +126,8 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                         width: size.width * 0.2,
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: FileImage(File(controller.productImages[index]!.path)),
+                            // image: FileImage(File(controller.productImages[index]!.path)),
+                            image: FileImage(controller.productImages[index]!),
                           ),
                         ),
                       ),

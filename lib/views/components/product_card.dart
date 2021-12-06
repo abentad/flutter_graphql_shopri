@@ -7,15 +7,7 @@ import 'package:shopri/utils/product_image_loader.dart';
 
 class ProductCard extends StatelessWidget {
   const ProductCard(
-      {Key? key,
-      this.hasShadows = false,
-      required this.name,
-      required this.image,
-      required this.price,
-      required this.ontap,
-      required this.index,
-      required this.size,
-      this.radiusDouble = 15.0})
+      {Key? key, this.hasShadows = false, required this.name, required this.image, required this.price, required this.ontap, required this.index, required this.size, this.radiusDouble = 15.0})
       : super(key: key);
   final String name;
   final String price;
@@ -33,9 +25,7 @@ class ProductCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 5.0),
       decoration: BoxDecoration(
         boxShadow: [
-          hasShadows
-              ? BoxShadow(color: Colors.grey.shade300, offset: const Offset(2, 3), blurRadius: 10.0)
-              : const BoxShadow(color: Colors.transparent, offset: Offset(2, 5), blurRadius: 10.0),
+          hasShadows ? BoxShadow(color: Colors.grey.shade300, offset: const Offset(2, 3), blurRadius: 10.0) : const BoxShadow(color: Colors.transparent, offset: Offset(2, 5), blurRadius: 10.0),
         ],
       ),
       child: InkWell(
@@ -61,6 +51,7 @@ class ProductCard extends StatelessWidget {
                       borderRadius: BorderRadius.only(topLeft: Radius.circular(radiusDouble), topRight: Radius.circular(radiusDouble)),
                     ),
                   ),
+                  fit: BoxFit.fill,
                   errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
               ),

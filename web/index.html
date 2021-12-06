@@ -33,7 +33,26 @@
   <!-- This script installs service_worker.js to provide PWA functionality to
        application. For more information, see:
        https://developers.google.com/web/fundamentals/primers/service-workers -->
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-analytics.js"></script>
   <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDLBIxVHRAjJjypLoz_g3qCM_C_HALUufo",
+      authDomain: "phoneauth-9e258.firebaseapp.com",
+      databaseURL: "https://phoneauth-9e258.firebaseio.com",
+      projectId: "phoneauth-9e258",
+      storageBucket: "phoneauth-9e258.appspot.com",
+      messagingSenderId: "885298790284",
+      appId: "1:885298790284:web:cd4e047da2fd1c227e20a9",
+      measurementId: "G-7ZZNQQV12R"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    //
+    //
+    //
     var serviceWorkerVersion = null;
     var scriptLoaded = false;
     function loadMainDartJs() {

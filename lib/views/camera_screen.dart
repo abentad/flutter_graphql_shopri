@@ -1,18 +1,20 @@
 import 'dart:io';
-
 import 'package:camera/camera.dart';
+import 'package:extended_image/extended_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:shopri/controllers/api_controller.dart';
 import 'package:shopri/controllers/my_camera_controller.dart';
+import 'package:shopri/views/image_edit_screen.dart';
 import 'package:shopri/views/product_add_screen.dart';
 import 'package:transition/transition.dart' as transition;
 
 class CameraScreen extends StatefulWidget {
-  const CameraScreen({Key? key, required this.cameras, this.fromAddMore = false}) : super(key: key);
+  const CameraScreen({Key? key, required this.cameras}) : super(key: key);
   final List<CameraDescription>? cameras;
-  final bool fromAddMore;
 
   @override
   State<CameraScreen> createState() => _CameraScreenState();
@@ -112,14 +114,9 @@ class _CameraScreenState extends State<CameraScreen> with TickerProviderStateMix
                     ),
                     GestureDetector(
                       onTap: () async {
-                        print('camera pressed');
                         pictureFile = await cameraController.takePicture();
                         setState(() {});
-                        print(pictureFile);
-                        Get.find<ApiController>().addToProductImages(pictureFile);
-                        widget.fromAddMore
-                            ? Navigator.pop(context)
-                            : Navigator.pushReplacement(context, transition.Transition(child: const ProductAddScreen(), transitionEffect: transition.TransitionEffect.FADE));
+                        Navigator.push(context, transition.Transition(child: ImageEditScreen(imageFile: pictureFile), transitionEffect: transition.TransitionEffect.FADE));
                       },
                       child: Container(
                         height: size.height * 0.18,
@@ -134,10 +131,8 @@ class _CameraScreenState extends State<CameraScreen> with TickerProviderStateMix
                     InkWell(
                       onTap: () async {
                         XFile? pickedFile = await Get.find<MyCameraController>().pickImageFromGallery();
-                        Get.find<ApiController>().addToProductImages(pickedFile);
-                        widget.fromAddMore
-                            ? Navigator.pop(context)
-                            : Navigator.pushReplacement(context, transition.Transition(child: const ProductAddScreen(), transitionEffect: transition.TransitionEffect.FADE));
+                        Get.find<ApiController>().addToProductImages(File(pickedFile!.path));
+                        Navigator.pushReplacement(context, transition.Transition(child: const ProductAddScreen(), transitionEffect: transition.TransitionEffect.FADE));
                       },
                       child: Icon(
                         MdiIcons.image,

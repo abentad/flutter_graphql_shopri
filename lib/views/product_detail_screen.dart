@@ -286,27 +286,26 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             ),
                             child: Row(
                               children: [
-                                CircleAvatar(
-                                  radius: size.height * 0.03,
-                                  backgroundColor: const Color(0xfff2f2f2),
+                                SizedBox(
+                                  height: size.height * 0.035,
                                   child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(50.0),
+                                    borderRadius: BorderRadius.circular(5.0),
                                     child: CachedNetworkImage(
                                       imageUrl: getProfileImageUrl(productInfo!['poster']['profile_image']),
                                       fit: BoxFit.fill,
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: size.width * 0.02),
+                                SizedBox(width: size.width * 0.04),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      productInfo!['poster']['username'].toString(),
+                                      productInfo!['poster']['username'].toString().capitalize!,
                                       style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
                                     ),
                                     SizedBox(height: size.height * 0.005),
-                                    Text("+251" + productInfo!['poster']['phoneNumber'].toString()),
+                                    Text(productInfo!['poster']['phoneNumber'].toString()),
                                   ],
                                 )
                               ],
