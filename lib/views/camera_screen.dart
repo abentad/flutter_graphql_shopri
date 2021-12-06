@@ -5,10 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:shopri/controllers/api_controller.dart';
 import 'package:shopri/controllers/my_camera_controller.dart';
 import 'package:shopri/views/image_edit_screen.dart';
-import 'package:shopri/views/product_add_screen.dart';
 import 'package:transition/transition.dart' as transition;
 
 class CameraScreen extends StatefulWidget {

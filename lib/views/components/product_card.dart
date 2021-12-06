@@ -2,18 +2,33 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:shopri/utils/price_format.dart';
 import 'package:shopri/utils/product_image_loader.dart';
 
 class ProductCard extends StatelessWidget {
   const ProductCard(
-      {Key? key, this.hasShadows = false, required this.name, required this.image, required this.price, required this.ontap, required this.index, required this.size, this.radiusDouble = 15.0})
+      {Key? key,
+      this.hasShadows = false,
+      required this.imageHeight,
+      required this.imageWidth,
+      required this.blurHash,
+      required this.name,
+      required this.image,
+      required this.price,
+      required this.ontap,
+      required this.index,
+      required this.size,
+      this.radiusDouble = 15.0})
       : super(key: key);
   final String name;
   final String price;
   final String image;
   final int index;
   final Size size;
+  final int imageHeight;
+  final int imageWidth;
+  final String blurHash;
   final double radiusDouble;
   final bool hasShadows;
   final Function() ontap;
@@ -43,12 +58,11 @@ class ProductCard extends StatelessWidget {
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(radiusDouble), topRight: Radius.circular(radiusDouble)),
                 child: CachedNetworkImage(
                   imageUrl: getProductImage(image),
-                  placeholder: (context, url) => Container(
-                    height: size.height * 0.15,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      borderRadius: BorderRadius.only(topLeft: Radius.circular(radiusDouble), topRight: Radius.circular(radiusDouble)),
+                  placeholder: (context, url) => SizedBox(
+                    height: double.parse(imageHeight.toString()) / (size.height * 100),
+                    width: double.parse(imageWidth.toString()) / (size.width * 100),
+                    child: BlurHash(
+                      hash: blurHash,
                     ),
                   ),
                   fit: BoxFit.fill,

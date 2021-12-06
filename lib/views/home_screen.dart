@@ -166,6 +166,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemCount: controller.products.length,
                           itemBuilder: (context, index) {
                             final product = controller.products[index];
+                            print("FirstImageHeight: ${product['height']}");
+                            print("FirstImageWidth: ${product['width']}");
+                            print("FirstImageblurHash: ${product['blurHash']}");
+                            print("deviceHeight: ${size.height}");
+                            print("deviceWidth: ${size.width}");
+                            print("calculatedHeight: ${double.parse(product['height'].toString()) / (size.height * 100)}");
+                            print("calculatedWidth: ${double.parse(product['width'].toString()) / (size.width * 100)}");
                             return Material(
                               color: Colors.transparent,
                               child: ProductCard(
@@ -175,6 +182,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 name: product['name'],
                                 price: product['price'],
                                 image: product['image'],
+                                imageHeight: product['height'],
+                                imageWidth: product['width'],
+                                blurHash: product['blurHash'],
                                 index: index,
                                 size: size,
                                 hasShadows: true,

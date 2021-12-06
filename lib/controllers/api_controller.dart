@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:graphql/client.dart';
@@ -14,6 +16,7 @@ import 'package:shopri/views/user_info_sign_up_screen.dart';
 import 'package:transition/transition.dart' as transition;
 import "package:http/http.dart" as http;
 import 'package:http_parser/http_parser.dart';
+import 'package:blurhash/blurhash.dart' as blurhash;
 
 class ApiController extends GetxController {
   Map<String, dynamic>? _loggedInUserInfo;
@@ -76,6 +79,7 @@ class ApiController extends GetxController {
   void setClient() {
     final _httpLink = HttpLink(kbaseUrl);
     final _authLink = AuthLink(getToken: () async => 'Bearer $_token');
+    print("Token: $_token");
     Link _link = _authLink.concat(_httpLink);
     _client = GraphQLClient(cache: GraphQLCache(), link: _link);
   }
@@ -108,6 +112,14 @@ class ApiController extends GetxController {
   }
 
   void addProduct(String name, String price, String? category, String description, BuildContext context) async {
+    Uint8List _firstImageAsUint8List = _productImages[0]!.readAsBytesSync();
+    var _firstImage = await decodeImageFromList(_firstImageAsUint8List);
+    var blurHash = await blurhash.BlurHash.encode(_firstImageAsUint8List, 4, 3);
+
+    print("FirstImageHeight: ${_firstImage.height}");
+    print("FirstImageWidth: ${_firstImage.width}");
+    print("FirstImageBlurHash: $blurHash");
+
     List<http.MultipartFile> _productMultipartImages = [];
     for (var xfile in _productImages) {
       final myFile = await http.MultipartFile.fromPath('productImage', File(xfile!.path).path, contentType: MediaType('image', 'jpeg'));
@@ -121,6 +133,9 @@ class ApiController extends GetxController {
         'price': price,
         'description': description,
         'category': category,
+        'height': _firstImage.height,
+        'width': _firstImage.width,
+        'blurHash': blurHash,
         'datePosted': DateTime.now().toString(),
       },
     );

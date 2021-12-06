@@ -16,6 +16,9 @@ class QueryController extends GetxController {
               category
               image
               datePosted
+              height
+              width
+              blurHash
               images{
                 image_id
                 url
@@ -91,9 +94,9 @@ class QueryController extends GetxController {
 
   String addProduct() {
     return r"""
-      mutation ($files: [Upload!]!, $name: String!, $price: String!, $description: String!, $category: String!, $datePosted: String!) {
+      mutation ($files: [Upload!]!, $name: String!, $price: String!, $description: String!, $height: Int!, $width: Int!, $blurHash: String!, $category: String!, $datePosted: String!) {
         createProduct(
-          data: {isPending: "false", views: 0, name: $name, price: $price, description: $description, category: $category, datePosted: $datePosted}
+          data: {isPending: "false", views: 0, name: $name, price: $price, height: $height, width: $width, blurHash: $blurHash, description: $description, category: $category, datePosted: $datePosted}
           files: $files
         ) {
           id
@@ -105,6 +108,9 @@ class QueryController extends GetxController {
           category
           image
           datePosted
+          height
+          width
+          blurHash
           poster {
             id
             deviceToken
