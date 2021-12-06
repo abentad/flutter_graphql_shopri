@@ -187,8 +187,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           ? isLoading
                               ? SliverToBoxAdapter(child: SizedBox(child: Center(child: Lottie.asset('assets/loading.json', height: size.height * 0.1, width: size.width * 0.1))))
                               // : const SliverToBoxAdapter(child: SizedBox.shrink())
-                              : SliverToBoxAdapter(child: SizedBox(child: Center(child: Lottie.asset('assets/loading.json', height: size.height * 0.1, width: size.width * 0.1))))
-                          // : const SliverToBoxAdapter(child: SizedBox.shrink())
+                              // : SliverToBoxAdapter(child: SizedBox(child: Center(child: Lottie.asset('assets/loading.json', height: size.height * 0.1, width: size.width * 0.1))))
+                              : const SliverToBoxAdapter(child: SizedBox.shrink())
                           : const SliverToBoxAdapter(child: Center(child: Text("No more data")))
                     ],
                   ),

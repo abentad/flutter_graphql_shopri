@@ -124,8 +124,8 @@ class _ImageEditScreenState extends State<ImageEditScreen> {
     final Uint8List? result = await ImageEditor.editImage(image: img, imageEditorOption: option);
     if (result == null) return;
     //* after crop compress the image and add it to the api controller product images list
-    // Uint8List compressedImage = await comporessList(result);
-    File file = await convertUintToFile(result);
+    Uint8List compressedImage = await comporessList(result, 30);
+    File file = await convertUintToFile(compressedImage);
     Get.find<ApiController>().addToProductImages(file);
     Navigator.pushReplacement(context, transition.Transition(child: const ProductAddScreen(), transitionEffect: transition.TransitionEffect.FADE));
   }
@@ -134,14 +134,14 @@ class _ImageEditScreenState extends State<ImageEditScreen> {
   void rotate(bool right) => editorKey.currentState?.rotate(right: right);
 }
 
-// Future<Uint8List> comporessList(Uint8List list) async {
-//   var result = await FlutterImageCompress.compressWithList(list, quality: 50);
-//   return result;
-// }
+Future<Uint8List> comporessList(Uint8List list, int compressionRatio) async {
+  var result = await FlutterImageCompress.compressWithList(list, quality: compressionRatio);
+  return result;
+}
 
 Future<File> convertUintToFile(Uint8List list) async {
   final tempDir = await getTemporaryDirectory();
-  File file = await File('${tempDir.path}/image.png').create();
+  File file = await File('${tempDir.path}/image.jpg').create();
   file.writeAsBytesSync(list);
   return file;
 }
