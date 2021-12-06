@@ -59,8 +59,8 @@ class ProductCard extends StatelessWidget {
                 child: CachedNetworkImage(
                   imageUrl: getProductImage(image),
                   placeholder: (context, url) => SizedBox(
-                    height: double.parse(imageHeight.toString()) / (size.height * 100),
-                    width: double.parse(imageWidth.toString()) / (size.width * 100),
+                    height: (double.parse(imageHeight.toString()) / size.height * 100) + 60.0,
+                    width: double.parse(imageWidth.toString()) / size.width * 100,
                     child: BlurHash(
                       hash: blurHash,
                     ),

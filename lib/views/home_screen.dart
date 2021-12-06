@@ -171,8 +171,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             print("FirstImageblurHash: ${product['blurHash']}");
                             print("deviceHeight: ${size.height}");
                             print("deviceWidth: ${size.width}");
-                            print("calculatedHeight: ${double.parse(product['height'].toString()) / (size.height * 100)}");
-                            print("calculatedWidth: ${double.parse(product['width'].toString()) / (size.width * 100)}");
+                            print("calculatedHeight: ${double.parse(product['height'].toString()) / size.height * 100}");
+                            print("calculatedWidth: ${double.parse(product['width'].toString()) / size.width * 100}");
                             return Material(
                               color: Colors.transparent,
                               child: ProductCard(
